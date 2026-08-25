@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: postmortem-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postmortem}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postmortem}
+      POSTGRES_DB: ${POSTGRES_DB:-postmortem}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postmortem -d postmortem"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.server
+    container_name: postmortem-server
+    restart: unless-stopped
+    environment:
+      PORT: "8080"
+      DATABASE_URL: postgres://postmortem:postmortem@postgres:5432/postmortem?sslmode=disable
+      JOBS_RUNNER_URL: http://jobs:8000
+      ENVIRONMENT: development
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  jobs:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.jobs
+    container_name: postmortem-jobs
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postmortem:postmortem@postgres:5432/postmortem
+      WORKER_PORT: "8000"
+      ENVIRONMENT: development
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "postmortem-jobs"
+version = "0.1.0"
+description = "NLP text extraction, failure mode classification, and pattern clustering for postmortem reports"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "spacy>=3.7.0",
+    "pydantic>=2.7.0",
+    "psycopg[binary]>=3.1.0",
+    "httpx>=0.27.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.4.0",
+    "mypy>=1.10.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/postmortem_jobs"]
