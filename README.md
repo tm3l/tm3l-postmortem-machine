@@ -80,7 +80,7 @@ Postmortem Machine is an automated incident intelligence system. It ingests publ
 
 ```bash
 # Clone the repository
-git clone https://github.com/tm3l/postmortem-machine.git
+git clone https://github.com/tm3l/tm3l-postmortem-machine.git
 cd postmortem-machine
 
 # Start PostgreSQL, Go API Server, and Python Jobs worker

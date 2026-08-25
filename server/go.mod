@@ -1,3 +1,3 @@
-module github.com/tm3l/postmortem-machine
+module github.com/tm3l/tm3l-postmortem-machine
 
 go 1.23
