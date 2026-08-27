@@ -1,43 +1,15 @@
-.PHONY: all build build-server build-jobs build-explorer test test-server test-jobs test-explorer docker-up docker-down clean
+.PHONY: all build test lint run
 
 all: build
 
-build: build-server build-jobs build-explorer
+build:
+	go build -o bin/server ./cmd/server
 
-build-server:
-	@echo "==> Building Go server..."
-	cd server && go build -v -o ../bin/server ./cmd/server
+test:
+	go test -v ./...
 
-build-jobs:
-	@echo "==> Building Python jobs package..."
-	cd jobs && python -m pip install -e .
+lint:
+	golangci-lint run
 
-build-explorer:
-	@echo "==> Building React explorer..."
-	cd explorer && npm install && npm run build
-
-test: test-server test-jobs test-explorer
-
-test-server:
-	@echo "==> Running Go server tests..."
-	cd server && go test -v ./...
-
-test-jobs:
-	@echo "==> Running Python tests..."
-	cd jobs && pytest
-
-test-explorer:
-	@echo "==> Running React explorer tests / typechecks..."
-	cd explorer && npm test --if-present
-
-docker-up:
-	@echo "==> Starting containers..."
-	docker compose up --build -d
-
-docker-down:
-	@echo "==> Stopping containers..."
-	docker compose down
-
-clean:
-	@echo "==> Cleaning build artifacts..."
-	rm -rf bin/ explorer/dist/
+run:
+	go run ./cmd/server
