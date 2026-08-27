@@ -1,0 +1,39 @@
+openapi: 3.1.0
+info:
+  title: TM3L Postmortem Machine API
+  description: Incident Report Ingestion, NLP Text Extraction & Pattern Clustering API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8083
+    description: Local development server
+paths:
+  /api/health:
+    get:
+      summary: Health check endpoint
+      responses:
+        '200':
+          description: Service is healthy
+  /api/v1/reports:
+    post:
+      summary: Ingest and analyze an incident postmortem report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, body]
+              properties:
+                title:
+                  type: string
+                body:
+                  type: string
+      responses:
+        '201':
+          description: Report ingested and queued for NLP clustering
+  /api/v1/clusters:
+    get:
+      summary: List systemic failure mode clusters across historic incidents
+      responses:
+        '200':
+          description: Failure clusters returned
