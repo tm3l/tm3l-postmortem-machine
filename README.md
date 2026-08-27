@@ -68,3 +68,7 @@ Visit `http://localhost:5175` to view the incident explorer.
 
 ## 📚 Documentation
 See [`docs/architecture.md`](docs/architecture.md) for detailed internals.
+
+
+## Documentation
+- [Architecture & Specifications](docs/INDEX.md)
